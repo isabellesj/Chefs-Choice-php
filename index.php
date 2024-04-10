@@ -3,6 +3,7 @@ require_once ("Models/Product.php");
 require_once ("Models/Database.php");
 require_once ("Utils/UrlModifier.php");
 require_once ("Pages/layout/navigation.php");
+require_once ("Pages/layout/header.php");
 
 
 $sortOrder = $_GET['sortOrder'] ?? "";
@@ -38,22 +39,9 @@ $urlModifier = new UrlModifier();
     layout_navigation($dbContext)
         ?>
     <!-- Header-->
-    <header class="bg-dark py-5">
-        <div class="container px-4 px-lg-5 my-5">
-            <div class="text-center text-white">
-                <?php
-                // $hour = date('h');
-                // if ($hour >= 9) {
-                //                     ?>
-                // <h1 class="display-4 fw-bolder">Super shoppen</h1>
-                //
-                <?php
-                // }
-                ?>
-                <p class="lead fw-normal text-white-50 mb-0">Handla massa onödigt hos oss!</p>
-            </div>
-        </div>
-    </header>
+    <?php
+    layout_header();
+    ?>
     <!-- Section-->
     <section class="py-5">
         <div class="container px-4 px-lg-5 mt-5">
