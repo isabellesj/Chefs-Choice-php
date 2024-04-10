@@ -1,0 +1,33 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.navigation {
+  background-color: #f8faef;
+}
+
+.navigation__wrapper {
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.navigation__logo {
+  height: 80px;
+  width: 100px;
+  /* kolla hur man använder mediaquerys med css alt. göra om till scss */
+}
+
+.navigation__user {
+  display: flex;
+  justify-content: space-around;
+  gap: 10px;
+}
+
+.navigation__user-link {
+  text-decoration: none;
+  color: #7f2121;
+}
