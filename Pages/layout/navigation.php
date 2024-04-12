@@ -1,10 +1,12 @@
 <?php
-function layout_navigation($dbContext)
+
+$categoryId = $_GET['categoryId'] ?? "";
+function layout_navigation($dbContext, $sortCol, $q)
 {
     ?>
     <section class="navigation">
         <section class="navigation__wrapper">
-            <img class="navigation__logo" src="./../assets/chefschoice.png"></img>
+            <a href='/'><img class="navigation__logo" src="./../assets/chefschoice.png"></img></a>
             <div class="navigation__user">
 
 
@@ -22,10 +24,24 @@ function layout_navigation($dbContext)
                 <a class="navigation__user-link" href="/user/logout">
                     Log out
                 </a>
+            </div>
         </section>
+        <form class="searchForm" method="GET">
+            <ul class="category">
+                <?php
+                foreach ($dbContext->getAllCategories() as $category) { ?>
 
+                    <li>
+                        <h3><a href="/viewCategory?id=<?php echo $category->id ?>">
+                                <?php echo $category->title ?>
+                            </a></h3>
+                    </li>
+                <?php } ?>
+            </ul>
+            <input class="search" type="text" name="q" value="<?php echo $q; ?>" />
+            <input type="hidden" name="id" value="<?php echo $category->id ?>" />
 
-        </div>
+        </form>
     </section>
     <?php
 }
