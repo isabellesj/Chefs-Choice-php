@@ -1,6 +1,4 @@
 <?php
-
-$categoryId = $_GET['categoryId'] ?? "";
 function layout_navigation($dbContext, $sortCol, $q)
 {
     ?>
@@ -28,15 +26,18 @@ function layout_navigation($dbContext, $sortCol, $q)
         </section>
         <form class="searchForm" method="GET">
             <ul class="category">
+                <li class="category__item"><a class="category__link" href="/allProducts">All Products</a></li>
                 <?php
                 foreach ($dbContext->getAllCategories() as $category) { ?>
 
-                    <li>
-                        <h3><a href="/viewCategory?id=<?php echo $category->id ?>">
-                                <?php echo $category->title ?>
-                            </a></h3>
+                    <li class="category__item">
+                        <a class="category__link" href="/viewCategory?id=<?php echo $category->id ?>">
+                            <?php echo $category->title ?>
+                        </a>
                     </li>
                 <?php } ?>
+
+            </ul>
             </ul>
             <input class="search" type="text" name="q" value="<?php echo $q; ?>" />
             <input type="hidden" name="id" value="<?php echo $category->id ?>" />

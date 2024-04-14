@@ -35,7 +35,6 @@ $id = $_GET['id'] ?? "";
     <?php
     layout_navigation($dbContext, $sortCol, $q);
     ?>
-
     <article class="filter">
         <p>Name <a href="?sortCol=title&sortOrder=asc&q=<?php echo $q ?>"><i class="fa-solid fa-arrow-up"></i></a>
             <a href="?sortCol=title&sortOrder=desc&q=<?php echo $q ?>"><i class="fa-solid fa-arrow-down"></i></a>
@@ -56,16 +55,16 @@ $id = $_GET['id'] ?? "";
             <a href="?sortCol=stockLevel&sortOrder=desc&q=<?php echo $q ?>"><i class="fa-solid fa-arrow-down"></i></a>
         </p>
     </article>
-    <section class="category__products">
+    <section class="allProducts">
         <?php
 
-        $result = $dbContext->searchProducts($sortCol, $sortOrder, $q, $categoryId, $pageNo, $pageSize);
+        $result = $dbContext->searchProducts($sortCol, $sortOrder, $q, null);
         foreach ($result["data"] as $product) {
             echo "<div class='product__wrapper'><p><a class='product__name' href='product.php?id=$product->id'>$product->title</a><img class='product__img' src=$product->image></img></p><p>Price: $product->price</p><button>BUY</button></div>";
+
         }
         ?>
     </section>
-
 
 
 </body>

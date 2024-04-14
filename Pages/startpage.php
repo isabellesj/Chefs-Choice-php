@@ -28,8 +28,8 @@ $urlModifier = new UrlModifier();
     <meta name="description" content="" />
     <meta name="author" content="" />
     <title>Chef's Choice</title>
-    <script src="https://kit.fontawesome.com/2471abcbe0.js" crossorigin="anonymous"></script>
     <link href="/css/style.css" rel="stylesheet" />
+    <script src="https://kit.fontawesome.com/2471abcbe0.js" crossorigin="anonymous"></script>
 </head>
 
 <body>
@@ -42,55 +42,18 @@ $urlModifier = new UrlModifier();
     layout_header();
     ?>
     <!-- Section-->
-    <section class="table__wrapper">
-        <h3>Chef-approved essentials for your table</h3>
+    <h3>Chef-approved essentials for your table</h3>
 
-        <table>
-            <thead>
-                <tr>
-                    <th>Name
-                        <a href="?sortCol=title&sortOrder=asc&q=<?php echo $q ?>"><i
-                                class="fa-solid fa-arrow-up"></i></a>
-                        <a href="?sortCol=title&sortOrder=desc&q=<?php echo $q ?>"><i
-                                class="fa-solid fa-arrow-down"></i></a>
-                    </th>
-                    <th>Category
-                        <a href="?sortCol=categoryId&sortOrder=asc&q=<?php echo $q ?>"><i
-                                class="fa-solid fa-arrow-up"></i></a>
+    <section class="popular__products">
+        <!-- Loopa alla produkter och SKAPA tr taggar -->
+        <?php
+        // $result = $dbContext->searchProducts($sortCol, $sortOrder, $q, null);
+        // foreach ($result["data"] as $product) {
+        foreach ($dbContext->getPopularProducts($sortCol, $sortOrder, $q) as $product) {
+            echo "<div class='product__wrapper'><p><a href='product.php?id=$product->id'>$product->title</a><img class='product__img' src=$product->image></img></p><p>$product->categoryId</p><p>$product->price</p><button>BUY</button></div>";
 
-                        <a href="?sortCol=categoryId&sortOrder=desc&q=<?php echo $q ?>"><i
-                                class="fa-solid fa-arrow-down"></i></a>
-                    </th>
-                    <th>Price
-                        <a href="?sortCol=price&sortOrder=asc&q=<?php echo $q ?>"><i
-                                class="fa-solid fa-arrow-up"></i></a>
-
-                        <a href="?sortCol=price&sortOrder=desc&q=<?php echo $q ?>"><i
-                                class="fa-solid fa-arrow-down"></i></a>
-                    </th>
-                    <th>Stock level
-                        <a href="?sortCol=stockLevel&sortOrder=asc&q=<?php echo $q ?>"><i
-                                class="fa-solid fa-arrow-up"></i></a>
-
-                        <a href="?sortCol=stockLevel&sortOrder=desc&q=<?php echo $q ?>"><i
-                                class="fa-solid fa-arrow-down"></i></a>
-                    </th>
-                </tr>
-            </thead>
-
-            <tbody>
-                <!-- Loopa alla produkter och SKAPA tr taggar -->
-                <?php
-                // $result = $dbContext->searchProducts($sortCol, $sortOrder, $q, null);
-                // foreach ($result["data"] as $product) {
-                foreach ($dbContext->getPopularProducts() as $product) {
-                    echo "<tr><td><a href='product.php?id=$product->id'>$product->title</a></td><td>$product->categoryId</td><td>$product->price</td><td>$product->stockLevel</td></tr>";
-
-                }
-                ?>
-            </tbody>
-        </table>
-
+        }
+        ?>
     </section>
     <!-- Footer-->
     <footer>

@@ -24,6 +24,10 @@ $router->addRoute('/viewCategory', function () {
     require __DIR__ . '/Pages/viewCategory.php';
 });
 
+$router->addRoute('/allProducts', function () {
+    require __DIR__ . '/Pages/allProducts.php';
+});
+
 // $router->addRoute('/input', function () {
 //     require __DIR__ . '/Pages/form.php';
 // });

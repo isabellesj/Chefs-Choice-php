@@ -75,26 +75,26 @@ class DBContext
         static $seeded = false;
         if ($seeded)
             return;
-        $this->createIfNotExisting('Chai', './assets/chai.svg', 18, 39, 'Beverages');
-        $this->createIfNotExisting('Chang', './assets/chai.svg', 19, 17, 'Beverages');
-        $this->createIfNotExisting('Aniseed Syrup', './assets/chai.svg', 10, 13, 'Condiments');
-        $this->createIfNotExisting('Chef Antons Cajun Seasoning', './assets/chai.svg', 22, 53, 'Condiments');
-        $this->createIfNotExisting('Chef Antons Gumbo Mix', './assets/chai.svg', 21, 0, 'Condiments');
-        // $this->createIfNotExisting('Grandmas Boysenberry Spread', 25, 120, 'Condiments');
-        // $this->createIfNotExisting('Uncle Bobs Organic Dried Pears', 30, 15, 'Produce');
-        // $this->createIfNotExisting('Northwoods Cranberry Sauce', 40, 6, 'Condiments');
-        // $this->createIfNotExisting('Mishi Kobe Niku', 97, 29, 'Meat/Poultry');
-        // $this->createIfNotExisting('Ikura', 31, 31, 'Seafood');
-        // $this->createIfNotExisting('Queso Cabrales', 21, 22, 'Dairy Products');
-        // $this->createIfNotExisting('Queso Manchego La Pastora', 38, 86, 'Dairy Products');
-        // $this->createIfNotExisting('Konbu', 6, 24, 'Seafood');
-        // $this->createIfNotExisting('Tofu', 22, 35, 'Produce');
-        // $this->createIfNotExisting('Genen Shouyu', 18, 39, 'Condiments');
-        // $this->createIfNotExisting('Pavlova', 12, 29, 'Confections');
-        // $this->createIfNotExisting('Alice Mutton', 39, 0, 'Meat/Poultry');
-        // $this->createIfNotExisting('Carnarvon Tigers', 231, 42, 'Seafood');
-        // $this->createIfNotExisting('Teatime Chocolate Biscuits', 213, 25, 'Confections');
-        // $this->createIfNotExisting('Sir Rodneys Marmalade', 81, 40, 'Confections');
+        $this->createIfNotExisting('Seedless Grapes', './assets/grapes.svg', 18, 39, 'Fruits');
+        $this->createIfNotExisting('Lemon', './assets/lemon.svg', 19, 17, 'Fruits');
+        $this->createIfNotExisting('Cocktail Tomatoes', './assets/tomatoes.svg', 10, 13, 'Vegetables');
+        $this->createIfNotExisting('Apple Granny Smith', './assets/apple.svg', 22, 53, 'Fruits');
+        $this->createIfNotExisting('Gouda Cheese', './assets/cheese.svg', 21, 0, 'Dairy');
+        $this->createIfNotExisting('Ground Chicken', './assets/chicken.svg', 25, 120, 'Meat/Poultry');
+        $this->createIfNotExisting('Chicken Ham', './assets/chickenham.svg', 30, 15, 'Meat/Poultry');
+        $this->createIfNotExisting('Trocadero 33cl', './assets/trocadero.svg', 40, 6, 'Soda');
+        $this->createIfNotExisting('Cuba Cola 33cl', './assets/cubacola.svg', 97, 29, 'Soda');
+        $this->createIfNotExisting('Brioche Bread', './assets/brioche.svg', 31, 31, 'Bread');
+        $this->createIfNotExisting('Magnum Almond', './assets/magnumalmond.svg', 21, 22, 'Frozen');
+        $this->createIfNotExisting('Pan Pizza Vesuvio', './assets/vesuvio.svg', 38, 86, 'Frozen');
+        $this->createIfNotExisting('Burger 4-pack', './assets/burger.svg', 6, 24, 'Meat/Poultry');
+        $this->createIfNotExisting('Spareribs', './assets/spareribs.svg', 22, 35, 'Meat/Poultry');
+        $this->createIfNotExisting('Milda Butter', './assets/mildabutter.svg', 18, 39, 'Dairy');
+        $this->createIfNotExisting('Milda Culiness', './assets/mildaculiness.svg', 12, 29, 'Dairy');
+        $this->createIfNotExisting('Sugar Snaps', './assets/sugarsnaps.svg', 39, 0, 'Vegetables');
+        $this->createIfNotExisting('Aubergine', './assets/aubergine.svg', 231, 42, 'Vegetables');
+        $this->createIfNotExisting('Crispy Nuggets', './assets/nuggets.svg', 213, 25, 'Frozen');
+        $this->createIfNotExisting('Chicken Kebab', './assets/chickenkebab.svg', 81, 40, 'Frozen');
         // $this->createIfNotExisting('Sir Rodneys Scones', 10, 3, 'Confections');
         // $this->createIfNotExisting('Gustafs Knäckebröd', 21, 104, 'Grains/Cereals');
         // $this->createIfNotExisting('Tunnbröd', 9, 61, 'Grains/Cereals');
@@ -216,7 +216,6 @@ class DBContext
             `image` varchar(200) NOT NULL,
             `price` INT,
             `stockLevel` INT,
-            `popularity` INT,
             `categoryId` INT NOT NULL,
             PRIMARY KEY (`id`),
             FOREIGN KEY (`categoryId`)
@@ -229,18 +228,12 @@ class DBContext
     }
 
     //POPULÄRA PRODUKTER:
-    function getPopularProducts()
+    function getPopularProducts($sortCol, $sortOrder, $q)
     {
         return $this->pdo->query('SELECT * FROM products ORDER BY stockLevel ASC limit 10')->fetchAll(
             PDO::FETCH_CLASS,
             'Product'
         );
-
-        // $prep = $this->pdo->prepare('SELECT * FROM products ORDER BY stockLevel ASC limit 10');
-        // $prep->setFetchMode(PDO::FETCH_CLASS, 'Product');
-        // $prep->execute(['stockLevel' => $stockLevel]);
-        // return $prep->fetch();
-
     }
 
     function searchProducts($sortCol, $sortOrder, $q, $categoryId, $pageNo = 1, $pageSize = 20)
