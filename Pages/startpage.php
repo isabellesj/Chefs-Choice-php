@@ -3,7 +3,9 @@ require_once ("Models/Product.php");
 require_once ("Models/Database.php");
 require_once ("Utils/UrlModifier.php");
 require_once ("Pages/layout/navigation.php");
+require_once ("Pages/layout/categories.php");
 require_once ("Pages/layout/header.php");
+require_once ("Pages/layout/footer.php");
 
 
 $sortOrder = $_GET['sortOrder'] ?? "";
@@ -33,34 +35,25 @@ $urlModifier = new UrlModifier();
 </head>
 
 <body>
-    <!-- Navigation-->
     <?php
-    layout_navigation($dbContext, $sortCol, $q)
-        ?>
-    <!-- Header-->
-    <?php
+    layout_navigation($dbContext);
+    layout_categories($dbContext, $q);
     layout_header();
     ?>
-    <!-- Section-->
-    <h3>Chef-approved essentials for your table</h3>
+
+    <h3 class="startpage__title">Chef-approved essentials for your table</h3>
 
     <section class="popular__products">
-        <!-- Loopa alla produkter och SKAPA tr taggar -->
         <?php
-        // $result = $dbContext->searchProducts($sortCol, $sortOrder, $q, null);
-        // foreach ($result["data"] as $product) {
         foreach ($dbContext->getPopularProducts($sortCol, $sortOrder, $q) as $product) {
-            echo "<div class='product__wrapper'><p><a href='product.php?id=$product->id'>$product->title</a><img class='product__img' src=$product->image></img></p><p>$product->categoryId</p><p>$product->price</p><button>BUY</button></div>";
-
+            echo "<div class='product__wrapper'><p><a class='product__name' href='/viewProduct?id=$product->id'>$product->title</a><img class='product__img' src=$product->image></img></p><p>Price: $product->price kr</p><button class='buy__button'>Add to cart</button></div>";
         }
         ?>
     </section>
     <!-- Footer-->
-    <footer>
-        <div class="container">
-            <p>Copyright &copy; Your Website 2023</p>
-        </div>
-    </footer>
+    <?php
+    layout_footer();
+    ?>
     <!-- Core theme JS-->
     <script src="js/scripts.js"></script>
 </body>

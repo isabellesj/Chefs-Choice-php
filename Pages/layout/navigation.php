@@ -1,48 +1,32 @@
 <?php
-function layout_navigation($dbContext, $sortCol, $q)
+function layout_navigation($dbContext)
 {
     ?>
     <section class="navigation">
         <section class="navigation__wrapper">
             <a href='/'><img class="navigation__logo" src="./../assets/chefschoice.png"></img></a>
-            <div class="navigation__user">
-
-
-                <a class="navigation__user-link" href="/user/login">
-                    Log in
-
+            <?php
+            //kolla om diven ens behövs eller om user-info ska bytas till annat namn => var förut navigation__users eller något
+            if (!$dbContext->getUsersDatabase()->getAuth()->isLoggedIn()) {
+                ?>
+                <a class="user__link" href="/user/login">
+                    <i id="user__icon" class="fa-solid fa-user"></i>
                 </a>
-
-
-                <a class="navigation__user-link" href="/user/register">
-                    Register
-                </a>
-
-
-                <a class="navigation__user-link" href="/user/logout">
-                    Log out
-                </a>
-            </div>
-        </section>
-        <form class="searchForm" method="GET">
-            <ul class="category">
-                <li class="category__item"><a class="category__link" href="/allProducts">All Products</a></li>
                 <?php
-                foreach ($dbContext->getAllCategories() as $category) { ?>
+            } else {
+                ?>
+                <div class="logout__wrapper">
+                    <i id="shoppingcart" class="fa-solid fa-basket-shopping"></i>
+                    <a class="logout__button" href="/user/logout">
+                        Log out
+                    </a>
+                </div>
+                <?php
 
-                    <li class="category__item">
-                        <a class="category__link" href="/viewCategory?id=<?php echo $category->id ?>">
-                            <?php echo $category->title ?>
-                        </a>
-                    </li>
-                <?php } ?>
+            }
 
-            </ul>
-            </ul>
-            <input class="search" type="text" name="q" value="<?php echo $q; ?>" />
-            <input type="hidden" name="id" value="<?php echo $category->id ?>" />
-
-        </form>
+            ?>
+        </section>
     </section>
     <?php
 }

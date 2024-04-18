@@ -11,15 +11,6 @@ $router->addRoute('/', function () {
     require __DIR__ . '/Pages/startpage.php';
 });
 
-// $router->addRoute('/viewProduct', function () {
-//     require __DIR__ . '/Pages/viewProduct.php';
-// });
-
-// $router->addRoute('/newproduct', function () {
-//     require (__DIR__ . '/Pages/newproduct.php');
-// });
-
-
 $router->addRoute('/viewCategory', function () {
     require __DIR__ . '/Pages/viewCategory.php';
 });
@@ -28,9 +19,25 @@ $router->addRoute('/allProducts', function () {
     require __DIR__ . '/Pages/allProducts.php';
 });
 
-// $router->addRoute('/input', function () {
-//     require __DIR__ . '/Pages/form.php';
-// });
+$router->addRoute('/viewProduct', function () {
+    require __DIR__ . '/Pages/viewProduct.php';
+});
+
+$router->addRoute('/user/login', function () {
+    require __DIR__ . '/Pages/users/login.php';
+});
+
+$router->addRoute('/user/logout', function () {
+    require __DIR__ . '/Pages/users/logout.php';
+});
+
+$router->addRoute('/user/register', function () {
+    require __DIR__ . '/Pages/users/register.php';
+});
+
+$router->addRoute('/user/registerthanks', function () {
+    require __DIR__ . '/Pages/users/registerthanks.php';
+});
 
 $router->dispatch();
 ?>

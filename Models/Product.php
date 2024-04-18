@@ -5,7 +5,6 @@ class Product
 
     // public $image;
     public $title;
-
     public $image;
     public $price;
     public $stockLevel;

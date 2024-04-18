@@ -4,6 +4,7 @@ require_once ("Utils/UrlModifier.php");
 require_once ("Pages/layout/header.php");
 require_once ("Pages/layout/navigation.php");
 require_once ("Pages/layout/footer.php");
+require_once ("Pages/layout/categories.php");
 
 $sortCol = $_GET['sortCol'] ?? "";
 $q = $_GET['q'] ?? "";
@@ -33,27 +34,29 @@ $id = $_GET['id'] ?? "";
 
 <body>
     <?php
-    layout_navigation($dbContext, $sortCol, $q);
+    layout_navigation($dbContext);
+    layout_categories($dbContext, $q);
     ?>
 
     <article class="filter">
-        <p>Name <a href="?sortCol=title&sortOrder=asc&q=<?php echo $q ?>"><i class="fa-solid fa-arrow-up"></i></a>
-            <a href="?sortCol=title&sortOrder=desc&q=<?php echo $q ?>"><i class="fa-solid fa-arrow-down"></i></a>
-        </p>
-        <p>Category
-            <a href="?sortCol=categoryId&sortOrder=asc&q=<?php echo $q ?>"><i class="fa-solid fa-arrow-up"></i></a>
-
-            <a href="?sortCol=categoryId&sortOrder=desc&q=<?php echo $q ?>"><i class="fa-solid fa-arrow-down"></i></a>
+        <p>Name <a href="?sortCol=title&sortOrder=asc&q=<?php echo $q ?>&id=<?php echo $categoryId ?>"><i
+                    id='filter__icon' class="fa-solid fa-arrow-up"></i></a>
+            <a href="?sortCol=title&sortOrder=desc&q=<?php echo $q ?>&id=<?php echo $categoryId ?>"><i id='filter__icon'
+                    class="fa-solid fa-arrow-down"></i></a>
         </p>
         <p>Price
-            <a href="?sortCol=price&sortOrder=asc&q=<?php echo $q ?>"><i class="fa-solid fa-arrow-up"></i></a>
+            <a href="?sortCol=price&sortOrder=asc&q=<?php echo $q ?>&id=<?php echo $categoryId ?>"><i id='filter__icon'
+                    class="fa-solid fa-arrow-up"></i></a>
 
-            <a href="?sortCol=price&sortOrder=desc&q=<?php echo $q ?>"><i class="fa-solid fa-arrow-down"></i></a>
+            <a href="?sortCol=price&sortOrder=desc&q=<?php echo $q ?>&id=<?php echo $categoryId ?>"><i id='filter__icon'
+                    class="fa-solid fa-arrow-down"></i></a>
         </p>
         <p>Stock level
-            <a href="?sortCol=stockLevel&sortOrder=asc&q=<?php echo $q ?>"><i class="fa-solid fa-arrow-up"></i></a>
+            <a href="?sortCol=stockLevel&sortOrder=asc&q=<?php echo $q ?>&id=<?php echo $categoryId ?>"><i
+                    id='filter__icon' class="fa-solid fa-arrow-up"></i></a>
 
-            <a href="?sortCol=stockLevel&sortOrder=desc&q=<?php echo $q ?>"><i class="fa-solid fa-arrow-down"></i></a>
+            <a href="?sortCol=stockLevel&sortOrder=desc&q=<?php echo $q ?>&id=<?php echo $categoryId ?>"><i
+                    id='filter__icon' class="fa-solid fa-arrow-down"></i></a>
         </p>
     </article>
     <section class="category__products">
@@ -61,11 +64,20 @@ $id = $_GET['id'] ?? "";
 
         $result = $dbContext->searchProducts($sortCol, $sortOrder, $q, $categoryId, $pageNo, $pageSize);
         foreach ($result["data"] as $product) {
-            echo "<div class='product__wrapper'><p><a class='product__name' href='product.php?id=$product->id'>$product->title</a><img class='product__img' src=$product->image></img></p><p>Price: $product->price</p><button>BUY</button></div>";
+            echo "<div class='product__wrapper'><p><a class='product__name' href='/viewProduct?id=$product->id'>$product->title</a><img class='product__img' src=$product->image></img></p><p>Price: $product->price kr</p><button class='buy__button'>Add to cart</button></div>";
         }
+        // for ($i = 1; $i <= $result["num_pages"]; $i++) {
+        //     if ($pageNo == $i) {
+        //         echo "$i&nbsp;";    // &nbsp; = fusk space så Stefan slapp göra margin i CSS
+        //     } else {
+        //         echo "<a class='listbutton' href='?sortCol=$sortCol&sortOrder=$sortOrder&q=$q&pageNo=$i'>$i</a>&nbsp;";
+        //     }
+        // }
+        
         ?>
     </section>
 
-
-
+    <?php
+    layout_footer()
+        ?>
 </body>
