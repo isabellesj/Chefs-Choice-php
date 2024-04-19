@@ -35,7 +35,7 @@ $id = $_GET['id'] ?? "";
 <body>
     <?php
     layout_navigation($dbContext);
-    layout_categories($dbContext, $q);
+    layout_categories($dbContext, $q, $categoryId);
     ?>
 
     <article class="filter">
@@ -66,14 +66,7 @@ $id = $_GET['id'] ?? "";
         foreach ($result["data"] as $product) {
             echo "<div class='product__wrapper'><p><a class='product__name' href='/viewProduct?id=$product->id'>$product->title</a><img class='product__img' src=$product->image></img></p><p>Price: $product->price kr</p><button class='buy__button'>Add to cart</button></div>";
         }
-        // for ($i = 1; $i <= $result["num_pages"]; $i++) {
-        //     if ($pageNo == $i) {
-        //         echo "$i&nbsp;";    // &nbsp; = fusk space så Stefan slapp göra margin i CSS
-        //     } else {
-        //         echo "<a class='listbutton' href='?sortCol=$sortCol&sortOrder=$sortOrder&q=$q&pageNo=$i'>$i</a>&nbsp;";
-        //     }
-        // }
-        
+
         ?>
     </section>
 

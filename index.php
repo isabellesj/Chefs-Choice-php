@@ -35,8 +35,16 @@ $router->addRoute('/user/register', function () {
     require __DIR__ . '/Pages/users/register.php';
 });
 
-$router->addRoute('/user/registerthanks', function () {
-    require __DIR__ . '/Pages/users/registerthanks.php';
+$router->addRoute('/user/verify_email', function () {
+    require __DIR__ . '/Pages/users/verify_email.php';
+});
+
+$router->addRoute('/user/verify_email', function () {
+    require __DIR__ . '/Pages/users/reset_password.php';
+});
+
+$router->addRoute('/user/forgotpassword', function () {
+    require __DIR__ . '/Pages/users/forgotpassword.php';
 });
 
 $router->dispatch();

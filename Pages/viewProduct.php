@@ -31,7 +31,7 @@ $product = $dbContext->getProduct($id);
 <body>
     <?php
     layout_navigation($dbContext);
-    layout_categories($dbContext, $q);
+    layout_categories($dbContext, $q, $categoryId);
     ?>
 
     <main class="viewproduct__wrapper">

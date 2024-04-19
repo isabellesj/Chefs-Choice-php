@@ -37,7 +37,7 @@ $urlModifier = new UrlModifier();
 <body>
     <?php
     layout_navigation($dbContext);
-    layout_categories($dbContext, $q);
+    layout_categories($dbContext, $q, $categoryId);
     layout_header();
     ?>
 

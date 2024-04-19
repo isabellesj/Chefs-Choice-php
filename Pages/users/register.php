@@ -26,13 +26,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $mail->SMTPSecure = 'tls';
             $mail->Port = 587;
 
+            //det här ska finnas i .env
+
             $mail->From = "noreply@chefschoice.com";
             $mail->FromName = "Chef";
-            $mail->addAddress($_POST['username']); //Address to which recipient will reply 
-            $mail->addReplyTo("info@chefschoice.com", "No-Reply"); //CC and BCC 
+            $mail->addAddress($_POST['username']);
+            $mail->addReplyTo("info@chefschoice.com", "No-Reply");
             $mail->isHTML(true);
             $mail->Subject = "Chef's Choice - verify email";
-            $url = 'http://localhost:8000/verify_email?selector=' . \urlencode($selector) . '&token=' . \urlencode($token);
+            $url = 'http://localhost:8000/user/verify_email?selector=' . \urlencode($selector) . '&token=' . \urlencode($token);
             $mail->Body = "
             <h2>Hi!</h2>
             <p>Thank you for signing up. Please verify your email address by clicking the following link: <a href='$url'>$url</a></p>
@@ -51,9 +53,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } catch (\Exception $e) {
         $message = "Something went wrong";
     }
-    //header('Location: /user/registerthanks');
-    //exit;
-//}
 }
 ?>
 
@@ -113,7 +112,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             </div>
                             <div class="register__submit__wrapper">
                                 <button class="register__button" type="submit" value="Register">
-                                    <a class="cancelreg" href="/user/registerthanks">Register</a>
+                                    <a class="cancelreg" href="">Register</a>
                                 </button>
                             </div>
                         </form>

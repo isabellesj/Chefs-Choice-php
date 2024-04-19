@@ -225,17 +225,15 @@ class DBContext
 
         $offset = ($pageNo - 1) * $pageSize;
         $sql .= " limit $offset, $pageSize";
-
         $prep = $this->pdo->prepare($sql);
         $prep->setFetchMode(PDO::FETCH_CLASS, 'Product');
         $prep->execute($paramsArray);
-        $data = $prep->fetchAll(); // arrayen
-        // return $data;
+        $data = $prep->fetchAll();
 
         $prep2 = $this->pdo->prepare($sqlCount);
         $prep2->execute($paramsArray);
 
-        $num_pages = $prep2->fetchColumn(); // antal sidor tex 3
+        $num_pages = $prep2->fetchColumn();
 
         $arr = ["data" => $data, "num_pages" => $num_pages];
         return $arr;

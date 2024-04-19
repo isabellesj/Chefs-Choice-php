@@ -6,7 +6,21 @@ require_once ("Pages/layout/navigation.php");
 require_once ("Pages/layout/footer.php");
 
 $dbContext = new DbContext();
-layout_header();
+
+try {
+    $dbContext->getUsersDatabase()->getAuth()->confirmEmail($_GET['selector'], $_GET['token']);
+} catch (Exception $e) {
+    $message = "Could not login";
+} catch (\Delight\Auth\InvalidSelectorTokenPairException $e) {
+    $message = "Invalid token";
+} catch (\Delight\Auth\TokenExpiredException $e) {
+    $message = "Token expired";
+} catch (\Delight\Auth\UserAlreadyExistsException $e) {
+    $message = "Email address already exists";
+} catch (\Delight\Auth\TooManyRequestsException $e) {
+    $message = "Too many requests";
+}
+
 ?>
 
 
@@ -39,7 +53,7 @@ layout_header();
         <div class="content">
 
 
-            Tack för din registering. Kolla din mail och klicka på länken
+            Your email adress is now verified!
         </div>
 
         </div>

@@ -1,5 +1,5 @@
 <?php
-function layout_categories($dbContext, $q)
+function layout_categories($dbContext, $q, $categoryId)
 {
     ?>
     <form class="searchform" method="GET">
@@ -18,7 +18,7 @@ function layout_categories($dbContext, $q)
         </ul>
         </ul>
         <input class="search" type="text" name="q" value="<?php echo $q; ?>" />
-        <input type="hidden" name="id" value="<?php echo $category->id ?>" />
+        <input type="hidden" name="id" value="<?php echo $categoryId; ?>" />
 
     </form>
     <?php

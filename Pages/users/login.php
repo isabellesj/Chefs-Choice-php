@@ -21,7 +21,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     } catch (Exception $e) {
         $message = "Could not login";
-
     }
 }
 ?>
@@ -64,7 +63,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
                 <div class="login__submit__wrapper">
                     <button class="login__button" type="submit">Log in</button>
-                    <a class="forgot__password__link" href="">Forgot password?</a>
+                    <a class="forgot__password__link" href="/user/forgotpassword">Forgot password?</a>
                     <a class="register__link" href="/user/register">Register</a>
                 </div>
             </form>
