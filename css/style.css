@@ -64,7 +64,8 @@
 .register__link,
 .logout__button,
 #filter__icon,
-.cancelreg {
+.cancelreg,
+.login__link {
   color: black;
   text-decoration: none;
 }
@@ -183,7 +184,8 @@
 }
 
 .login__wrapper,
-.register__wrapper {
+.register__wrapper,
+.reset__wrapper {
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -193,14 +195,16 @@
 }
 
 .login__message__wrapper,
-.register__message__wrapper {
+.register__message__wrapper,
+.reset__message__wrapper {
   display: flex;
   justify-content: space-between;
   padding: 20px 10px 20px 10px;
 }
 
 .login__input,
-.register__input {
+.register__input,
+.reset__input {
   border: none;
   border-bottom: 1px solid #b6baa7;
 }
@@ -208,7 +212,9 @@
 .login__input:active,
 .login__input:focus,
 .register__input:active,
-.register__input:focus {
+.register__input:focus,
+.reset__input:active,
+.reset__input:focus {
   outline: none;
 }
 
@@ -220,13 +226,42 @@
 }
 
 .login__button,
-.register__button {
+.register__button,
+.reset__button {
   border: none;
   padding: 10px;
   border-radius: 15px;
   background-color: #b6baa7;
   width: 100px;
   margin: 10px;
+}
+
+.reset__button {
+  width: auto;
+}
+
+.forgotpassword__wrapper,
+.verifiedaccount__wrapper {
+  height: 69vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.register__account__wrapper {
+  height: 69vh;
+  display: flex;
+  justify-content: center;
+}
+
+.register__email-text,
+.forgot__email-text {
+  height: 69vh;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  text-align: center;
 }
 
 .viewproduct__buy__button {
@@ -239,14 +274,16 @@
 }
 
 .login__submit__wrapper,
-.register__submit__wrapper {
+.register__submit__wrapper,
+.reset__submit__wrapper {
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
 .login,
-.register {
+.register,
+.reset {
   height: 67vh;
 }
 
@@ -294,6 +331,11 @@
 
 #shoppingcart {
   font-size: 1.2rem;
+}
+
+.shoppingcart__wrapper {
+  display: flex;
+  gap: 5px;
 }
 
 @media screen and (min-width: 750px) {
@@ -350,19 +392,17 @@
   }
 
   .login__wrapper,
-  .register__wrapper {
+  .register__wrapper,
+  .reset__wrapper {
     width: 60%;
   }
 
   .login,
-  .register {
+  .register,
+  .reset {
     display: flex;
     justify-content: center;
     height: 58vh;
-  }
-
-  .viewproduct__buy__button:hover {
-    cursor: pointer;
   }
 
   .buy__button:hover {
@@ -375,7 +415,8 @@
 
   .viewproduct__buy__button:hover,
   .login__button:hover,
-  .register__button:hover {
+  .register__button:hover,
+  .reset__button:hover {
     background-color: #d0d4c2;
     cursor: pointer;
   }

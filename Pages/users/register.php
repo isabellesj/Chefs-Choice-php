@@ -4,71 +4,78 @@ require_once ('Models/Database.php');
 require_once ("Pages/layout/categories.php");
 require_once ("Pages/layout/navigation.php");
 require_once ("Pages/layout/footer.php");
+require_once ("Functions/doctype.php");
+require_once ("Utils/Validator.php");
 
 $q = $_GET['q'] ?? "";
+$token = $_GET['token'] ?? "";
+$selector = $_GET['selector'] ?? "";
 
 $dbContext = new DbContext();
 $message = "";
 $username = "";
+$password = "";
+$passwordAgain = "";
 $registeredOk = false;
+$v = new Validator($_POST);
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // TODO:Add validation - redan registrerad, password != passwordAgain
     $username = $_POST['username'];
     $password = $_POST['password'];
-    try {
-        $userId = $dbContext->getUsersDatabase()->getAuth()->register($username, $password, $username, function ($selector, $token) {
-            $mail = new PHPMailer\PHPMailer\PHPMailer(true);
-            $mail->isSMTP();
-            $mail->Host = 'smtp.ethereal.email';
-            $mail->SMTPAuth = true;
-            $mail->Username = 'virginia91@ethereal.email';
-            $mail->Password = 'VjQ1fE6EyXT6VhaEAR';
-            $mail->SMTPSecure = 'tls';
-            $mail->Port = 587;
+    $passwordAgain = $_POST['passwordAgain'];
 
-            //det här ska finnas i .env
+    $v->field('username')->required()->email();
+    $v->field('password')->required()->min_len(8)->max_len(16)->must_contain('@#$&!')->must_contain('a-z')->must_contain('A-Z')->must_contain('0-9');
 
-            $mail->From = "noreply@chefschoice.com";
-            $mail->FromName = "Chef";
-            $mail->addAddress($_POST['username']);
-            $mail->addReplyTo("info@chefschoice.com", "No-Reply");
-            $mail->isHTML(true);
-            $mail->Subject = "Chef's Choice - verify email";
-            $url = 'http://localhost:8000/user/verify_email?selector=' . \urlencode($selector) . '&token=' . \urlencode($token);
-            $mail->Body = "
-            <h2>Hi!</h2>
-            <p>Thank you for signing up. Please verify your email address by clicking the following link: <a href='$url'>$url</a></p>
-            <p>If you are having any issues, please don't hesitate to contact us.</p>
-            <p>Do you have any problems or need help? <br> 
-            Please contact info@chefschoice.com</p>";
-            $mail->send();
-        });
-        $registeredOk = true;
-    } catch (\Delight\Auth\InvalidEmailException $e) {
-        $message = "Incorrect email";
-    } catch (\Delight\Auth\InvalidPasswordException $e) {
-        $message = "Invalid password";
-    } catch (\Delight\Auth\UserAlreadyExistsException $e) {
-        $message = "User already exist";
-    } catch (\Exception $e) {
-        $message = "Something went wrong";
+    if ($_POST['password'] == $_POST['passwordAgain']) {
+        if ($v->is_valid()) {
+            try {
+                $userId = $dbContext->getUsersDatabase()->getAuth()->register($username, $password, $username, function ($selector, $token) {
+                    $mail = new PHPMailer\PHPMailer\PHPMailer(true);
+                    $mail->isSMTP();
+                    $mail->Host = 'smtp.ethereal.email';
+                    $mail->SMTPAuth = true;
+                    $mail->Username = 'virginia91@ethereal.email';
+                    $mail->Password = 'VjQ1fE6EyXT6VhaEAR';
+                    $mail->SMTPSecure = 'tls';
+                    $mail->Port = 587;
+
+                    $mail->From = "noreply@chefschoice.com";
+                    $mail->FromName = "Chef's Choice";
+                    $mail->addAddress($_POST['username']);
+                    $mail->isHTML(true);
+                    $mail->Subject = "Chef's Choice - verify email";
+                    $url = 'http://localhost:8000/user/verify_email?selector=' . \urlencode($selector) . '&token=' . \urlencode($token);
+                    $mail->Body = "
+                <h2>Hi!</h2>
+                <p>Thank you for signing up. Please verify your email address by clicking the following link: <a href='$url'>$url</a></p>
+                <p>If you are having any issues, please don't hesitate to contact us.</p>
+                <p>Do you have any problems or need help? <br> 
+                Please contact info@chefschoice.com</p>";
+
+                    $mail->send();
+                });
+                $registeredOk = true;
+            } catch (\Delight\Auth\InvalidEmailException $e) {
+                $message = "Incorrect email";
+            } catch (\Delight\Auth\InvalidPasswordException $e) {
+                $message = "Invalid password";
+            } catch (\Delight\Auth\UserAlreadyExistsException $e) {
+                $message = "User already exist";
+            } catch (\Exception $e) {
+                $message = "Something went wrong";
+            }
+        } else {
+            $message = "Fix registration errors";
+        }
+    } else {
+        $message = "Password does not match";
     }
 }
+
+
+doctype();
 ?>
-
-
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <meta name="description" content="" />
-    <meta name="author" content="" />
-    <title>Chef's Choice</title>
-    <script src="https://kit.fontawesome.com/2471abcbe0.js" crossorigin="anonymous"></script>
-    <link href="/css/style.css" rel="stylesheet" />
-</head>
 
 <body>
 
@@ -77,51 +84,50 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     ?>
 
     <main>
+        <?php if ($registeredOk) {
 
-        <div class="content">
-            <?php if ($registeredOk) {
-
-                ?>
-                <div>Thank you for registering. Please check your email inbox for a message from us containing a
-                    verification link to complete your registration process.</div>
-
-                <?php
-            } else {
-                ?>
-
-                <div class="register">
-                    <section class="register__wrapper">
-                        <div class="register__message__wrapper">
-                            <h2>Register:
-                                <?php echo $message; ?>
-                            </h2>
-                            <a class="cancel__link" href="/user/login"><i class="fa-solid fa-xmark"></i></a>
-                        </div>
-                        <form method="post" class="form">
-                            <div class="username__wrapper">
-                                <label for="name">Username</label>
-                                <input class="register__input" type="username" name="username">
-                            </div>
-                            <div class="password__wrapper">
-                                <label for="name">Password</label>
-                                <input class="register__input" type="password" name="password">
-                            </div>
-                            <div class="password__wrapper">
-                                <label for="name">Password again</label>
-                                <input class="register__input" type="password" name="passwordAgain">
-                            </div>
-                            <div class="register__submit__wrapper">
-                                <button class="register__button" type="submit" value="Register">
-                                    <a class="cancelreg" href="">Register</a>
-                                </button>
-                            </div>
-                        </form>
-
-                        <?php
-            }
             ?>
-                </section>
+            <div class="register__account__wrapper">
+                <p class="register__email-text">Thank you for registering. Please check your email inbox for a message from
+                    us containing a verification link to complete your registration process.</p>
             </div>
+            <?php
+        } else {
+            ?>
+
+            <div class="register">
+                <section class="register__wrapper">
+                    <div class="register__message__wrapper">
+                        <h2>Register:
+                            <?php echo $message; ?>
+                        </h2>
+                        <a class="cancel__link" href="/user/login"><i class="fa-solid fa-xmark"></i></a>
+                    </div>
+                    <form method="post" class="form">
+                        <div class="username__wrapper">
+                            <label for="name">Username</label>
+                            <input class="register__input" type="text" value="<?php echo $username ?>" name="username">
+                        </div>
+                        <div class="password__wrapper">
+                            <label for="name">Password</label>
+                            <input class="register__input" type="password" value="<?php echo $password ?>" name="password">
+                        </div>
+                        <div class="password__wrapper">
+                            <label for="name">Password again</label>
+                            <input class="register__input" type="password" value="<?php echo $passwordAgain ?>"
+                                name="passwordAgain">
+                        </div>
+                        <div class="register__submit__wrapper">
+                            <button class="register__button" type="submit" value="Register">
+                                Register
+                            </button>
+                        </div>
+                    </form>
+
+                    <?php
+        }
+        ?>
+            </section>
 
 
     </main>

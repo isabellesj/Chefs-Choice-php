@@ -4,29 +4,20 @@ require_once ("Utils/UrlModifier.php");
 require_once ("Pages/layout/navigation.php");
 require_once ("Pages/layout/footer.php");
 require_once ("Pages/layout/categories.php");
+require_once ("Functions/doctype.php");
 
 $id = $_GET['id'] ?? "";
 $q = $_GET['q'] ?? "";
+$categoryId = $_GET['id'] ?? "";
 
 
 $dbContext = new DBContext();
 $urlModifier = new UrlModifier();
 
 $product = $dbContext->getProduct($id);
+
+doctype();
 ?>
-
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <meta name="description" content="" />
-    <meta name="author" content="" />
-    <title>Chef's Choice</title>
-    <script src="https://kit.fontawesome.com/2471abcbe0.js" crossorigin="anonymous"></script>
-    <link href="/css/style.css" rel="stylesheet" />
-</head>
 
 <body>
     <?php

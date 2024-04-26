@@ -39,12 +39,16 @@ $router->addRoute('/user/verify_email', function () {
     require __DIR__ . '/Pages/users/verify_email.php';
 });
 
-$router->addRoute('/user/verify_email', function () {
+$router->addRoute('/user/reset_password', function () {
     require __DIR__ . '/Pages/users/reset_password.php';
 });
 
 $router->addRoute('/user/forgotpassword', function () {
     require __DIR__ . '/Pages/users/forgotpassword.php';
+});
+
+$router->addRoute('/addtocart', function () {
+    require __DIR__ . '/addtocart.php';
 });
 
 $router->dispatch();

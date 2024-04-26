@@ -6,35 +6,38 @@ require_once ("Pages/layout/navigation.php");
 require_once ("Pages/layout/categories.php");
 require_once ("Pages/layout/header.php");
 require_once ("Pages/layout/footer.php");
+require_once ("Functions/showProducts.php");
+require_once ("Functions/oneOf.php");
+require_once ("Functions/doctype.php");
 
 
 $sortOrder = $_GET['sortOrder'] ?? "";
+$sortOrder = $sortOrder == 'desc' ? 'desc' : 'asc';
 $sortCol = $_GET['sortCol'] ?? "";
+$sortCol = oneOf($sortCol, ["title", "categoryId", "price", "stockLevel"], "id");
 $q = $_GET['q'] ?? "";
-$pageNo = $_GET['pageNo'] ?? "1";
-$pageSize = $_GET['pageSize'] ?? "20";
+$pageSize = intval($_GET['pageSize'] ?? "5");
+$pageNo = intval($_GET['pageNo'] ?? "1");
 $categoryId = $_GET['categoryId'] ?? "";
 $stockLevel = $_GET['stockLevel'] ?? "";
 
 
 $dbContext = new DBContext();
 $urlModifier = new UrlModifier();
+
+doctype();
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <meta name="description" content="" />
-    <meta name="author" content="" />
-    <title>Chef's Choice</title>
-    <link href="/css/style.css" rel="stylesheet" />
-    <script src="https://kit.fontawesome.com/2471abcbe0.js" crossorigin="anonymous"></script>
-</head>
-
 <body>
+    <script>
+        async function addToCart(id) {
+            const quantity = await ((await fetch(`/addtocart?id=${id}`)).text())
+            console.log(quantity)
+            document.getElementById("quantity").innerText = quantity
+        }
+    </script>
+
+
     <?php
     layout_navigation($dbContext);
     layout_categories($dbContext, $q, $categoryId);
@@ -46,7 +49,7 @@ $urlModifier = new UrlModifier();
     <section class="popular__products">
         <?php
         foreach ($dbContext->getPopularProducts($sortCol, $sortOrder, $q) as $product) {
-            echo "<div class='product__wrapper'><p><a class='product__name' href='/viewProduct?id=$product->id'>$product->title</a><img class='product__img' src=$product->image></img></p><p>Price: $product->price kr</p><button class='buy__button'>Add to cart</button></div>";
+            echo showProducts($product);
         }
         ?>
     </section>

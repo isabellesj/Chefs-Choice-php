@@ -4,9 +4,8 @@ require_once ('Models/Database.php');
 require_once ("Pages/layout/header.php");
 require_once ("Pages/layout/navigation.php");
 require_once ("Pages/layout/footer.php");
+require_once ("Functions/doctype.php");
 
-$sortCol = $_GET['sortCol'] ?? "";
-$q = $_GET['q'] ?? "";
 
 $dbContext = new DbContext();
 $message = "";
@@ -23,20 +22,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $message = "Could not login";
     }
 }
+
+doctype();
 ?>
-
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <meta name="description" content="" />
-    <meta name="author" content="" />
-    <title>Chef's Choice</title>
-    <link href="/css/style.css" rel="stylesheet" />
-    <script src="https://kit.fontawesome.com/2471abcbe0.js" crossorigin="anonymous"></script>
-</head>
 
 <body>
     <?php

@@ -5,15 +5,20 @@ require_once ("Pages/layout/header.php");
 require_once ("Pages/layout/navigation.php");
 require_once ("Pages/layout/footer.php");
 require_once ("Pages/layout/categories.php");
+require_once ("Functions/showProducts.php");
+require_once ("Functions/oneOf.php");
+require_once ("Functions/doctype.php");
 
 $sortCol = $_GET['sortCol'] ?? "";
+$sortCol = oneOf($sortCol, ["title", "categoryId", "price", "stockLevel"], "id");
 $q = $_GET['q'] ?? "";
 $sortOrder = $_GET['sortOrder'] ?? "";
+$sortOrder = $sortOrder == 'desc' ? 'desc' : 'asc';
 $categoryId = $_GET['id'] ?? "";
-$pageSize = $_GET['pageSize'] ?? "5";
-$pageNo = $_GET['pageNo'] ?? "1";
+$pageSize = intval($_GET['pageSize'] ?? "5");
+$pageNo = intval($_GET['pageNo'] ?? "1");
 $dbContext = new DBContext();
-$urlModifier = new UrlModifier(); //??
+$urlModifier = new UrlModifier();
 $category = $dbContext->getCategory($categoryId);
 $id = $_GET['id'] ?? "";
 
@@ -22,20 +27,22 @@ $id = $_GET['id'] ?? "";
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <meta name="description" content="" />
-    <meta name="author" content="" />
-    <title>Chef's Choice</title>
-    <script src="https://kit.fontawesome.com/2471abcbe0.js" crossorigin="anonymous"></script>
-    <link href="/css/style.css" rel="stylesheet" />
-</head>
+<?php
+doctype();
+?>
 
 <body>
+    <script>
+        async function addToCart(id) {
+            const quantity = await ((await fetch(`/addtocart?id=${id}`)).text())
+            console.log(quantity)
+            document.getElementById("quantity").innerText = quantity
+        }
+    </script>
+
     <?php
     layout_navigation($dbContext);
-    layout_categories($dbContext, $q);
+    layout_categories($dbContext, $q, $categoryId);
     ?>
     <article class="filter">
         <p>Name <a href="?sortCol=title&sortOrder=asc&q=<?php echo $q ?>"><i id='filter__icon'
@@ -70,7 +77,7 @@ $id = $_GET['id'] ?? "";
 
         $result = $dbContext->searchProducts($sortCol, $sortOrder, $q, null, $pageNo);
         foreach ($result["data"] as $product) {
-            echo "<div class='product__wrapper'><p><a class='product__name' href='/viewProduct?id=$product->id'>$product->title</a><img class='product__img' src=$product->image></img></p><p>Price: $product->price kr</p><button class='buy__button'>Add to cart</button></div>";
+            echo showProducts($product);
         }
 
         ?>

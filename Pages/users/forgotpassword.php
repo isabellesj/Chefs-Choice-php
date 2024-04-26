@@ -4,6 +4,7 @@ require_once ('Models/Database.php');
 require_once ("Pages/layout/categories.php");
 require_once ("Pages/layout/navigation.php");
 require_once ("Pages/layout/footer.php");
+require_once ("Functions/doctype.php");
 
 $q = $_GET['q'] ?? "";
 
@@ -12,11 +13,12 @@ $message = "";
 $resetOk = false;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    //ie("hej");
     $username = $_POST['username'];
 
     try {
-        $dbContext->getUsersDatabase()->getAuth()->forgotPassword($_POST['username'], function ($selector, $token) {
+        $expirationTime = 86400;
+
+        $dbContext->getUsersDatabase()->getAuth()->forgotPassword($_POST['username'], function ($selector, $token) use ($expirationTime) {
             $mail = new PHPMailer\PHPMailer\PHPMailer(true);
             $mail->isSMTP();
             $mail->Host = 'smtp.ethereal.email';
@@ -37,9 +39,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $url = 'http://localhost:8000/user/reset_password?selector=' . \urlencode($selector) . '&token=' . \urlencode($token);
             $mail->Body = "
             <h2>Password reset</h2>
-            <p>If you've lost your password or wish to reset it, click <a href=''$url'>$url'>here</a> to get started</p>";
+            <p>If you've lost your password or wish to reset it, click here: <a href='$url'>$url'></a> to get started</p>";
             $mail->send();
-        });
+        }, $expirationTime);
         $resetOk = true;
     } catch (\Delight\Auth\InvalidEmailException $e) {
         $message = "Invalid email address";
@@ -54,53 +56,54 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
+doctype();
 ?>
-
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <meta name="description" content="" />
-    <meta name="author" content="" />
-    <title>Chef's Choice</title>
-    <script src="https://kit.fontawesome.com/2471abcbe0.js" crossorigin="anonymous"></script>
-    <link href="/css/style.css" rel="stylesheet" />
-</head>
 
 <body>
     <?php
     layout_navigation($dbContext);
-    echo $message;
     ?>
     <main>
         <?php if ($resetOk) {
             ?>
-            <div>Please check your email inbox for a message from us containing a verification link to reset your password.
+            <div class="forgotpassword__wrapper">
+                <p class="forgot__email-text">Please check your email inbox for a message from us containing a link to
+                    reset your password.</p>
             </div>
             <?php
         } else {
             ?>
 
-            <form method="post" class="form">
-                <div class="username__wrapper">
-                    <label for="name">Username</label>
-                    <input class="register__input" type="email" name="username" />
-                </div>
-                <div class="register__submit__wrapper">
-                    <button class="reset__button" type="submit" value="Skicka">
-                        reset password
-                    </button>
-                </div>
-            </form>
-            <?php
+            <div class="reset">
+                <section class="reset__wrapper">
+                    <div class="reset__message__wrapper">
+                        <h2>Forgot password:
+                            <?php echo $message; ?>
+                        </h2>
+                        <a class="cancel__link" href="/user/login"><i class="fa-solid fa-xmark"></i></a>
+                    </div>
+                    <form method="post" class="form">
+                        <div class="username__wrapper">
+                            <label for="name">Username</label>
+                            <input class="reset__input" type="email" name="username" />
+                        </div>
+                        <div class="reset__submit__wrapper">
+                            <button class="reset__button" type="submit" value="Skicka">
+                                Reset password
+                            </button>
+                        </div>
+                    </form>
+                    <?php
         }
         ?>
-        <?php
-        layout_footer();
-        ?>
+            </section>
+        </div>
     </main>
+
+    <?php
+    layout_footer();
+    ?>
+
 </body>
 
 </html>

@@ -6,7 +6,6 @@ function layout_navigation($dbContext)
         <section class="navigation__wrapper">
             <a href='/'><img class="navigation__logo" src="./../assets/chefschoice.png"></img></a>
             <?php
-            //kolla om diven ens behövs eller om user-info ska bytas till annat namn => var förut navigation__users eller något
             if (!$dbContext->getUsersDatabase()->getAuth()->isLoggedIn()) {
                 ?>
                 <a class="user__link" href="/user/login">
@@ -16,7 +15,18 @@ function layout_navigation($dbContext)
             } else {
                 ?>
                 <div class="logout__wrapper">
-                    <i id="shoppingcart" class="fa-solid fa-basket-shopping"></i>
+                    <div class="shoppingcart__wrapper">
+                        <i id="shoppingcart" class="fa-solid fa-cart-shopping"></i>
+                        <p>
+                            <?php
+                            $cartItems = $dbContext->getCart();
+                            $totalQuantity = 0;
+                            foreach ($cartItems as $item) {
+                                $totalQuantity += $item->quantity;
+                            }
+                            echo $totalQuantity ?>
+                        </p>
+                    </div>
                     <a class="logout__button" href="/user/logout">
                         Log out
                     </a>

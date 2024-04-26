@@ -2,6 +2,7 @@
 require_once ('Models/Product.php');
 require_once ('Models/Category.php');
 require_once ('Models/UserDatabase.php');
+require_once ('Models/Cart.php');
 require_once ('vendor/autoload.php');
 class DBContext
 {
@@ -32,6 +33,12 @@ class DBContext
     function getAllCategories()
     {
         return $this->pdo->query('SELECT * FROM category')->fetchAll(PDO::FETCH_CLASS, 'Category');
+
+    }
+
+    function getCart()
+    {
+        return $this->pdo->query('SELECT * FROM shoppingCartItem')->fetchAll(PDO::FETCH_CLASS, 'Cart');
 
     }
 
@@ -128,13 +135,27 @@ class DBContext
             $category = $this->getCategoryByTitle($categoryName);
         }
 
-
-        //insert plus get new id 
-        // return id             
         $prep = $this->pdo->prepare('INSERT INTO products (title, image, price, stockLevel, categoryId) VALUES(:title, :image, :price, :stockLevel, :categoryId )');
         $prep->execute(["title" => $title, "image" => $image, "price" => $price, "stockLevel" => $stockLevel, "categoryId" => $category->id]);
         return $this->pdo->lastInsertId();
 
+    }
+
+    function addToCart($productId)
+    {
+        $prep = $this->pdo->prepare('SELECT id, quantity FROM shoppingCartItem WHERE productId = :productId');
+        $prep->execute(["productId" => $productId]);
+        $existingItem = $prep->fetch();
+
+        if ($existingItem) {
+            $quantity = $existingItem['quantity'] + 1;
+            $prep = $this->pdo->prepare('UPDATE shoppingCartItem SET quantity = :quantity WHERE id = :id');
+            $prep->execute(["quantity" => $quantity, "id" => $existingItem['id']]);
+        } else {
+            $prep = $this->pdo->prepare('INSERT INTO shoppingCartItem (quantity, productId) VALUES (1,:productId)');
+            $prep->execute(["productId" => $productId]);
+        }
+        return 1;
     }
 
     function initIfNotInitialized()
@@ -163,6 +184,15 @@ class DBContext
             PRIMARY KEY (`id`),
             FOREIGN KEY (`categoryId`)
                 REFERENCES category(id)
+            ) ";
+
+        $sql = "CREATE TABLE IF NOT EXISTS `shoppingCartItem` (
+            `id` INT AUTO_INCREMENT NOT NULL,
+            `quantity`INT NOT NULL,
+            `productId` INT NOT NULL,
+            PRIMARY KEY (`id`),
+            FOREIGN KEY (`productId`)
+            REFERENCES products(id)
             ) ";
 
         $this->pdo->exec($sql);
