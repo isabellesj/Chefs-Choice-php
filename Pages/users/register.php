@@ -30,13 +30,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($_POST['password'] == $_POST['passwordAgain']) {
         if ($v->is_valid()) {
             try {
-                $userId = $dbContext->getUsersDatabase()->getAuth()->register($username, $password, $username, function ($selector, $token) {
+                $Username = $_ENV['Username'];
+                $Password = $_ENV['Password'];
+
+                $userId = $dbContext->getUsersDatabase()->getAuth()->register($username, $password, $username, function ($selector, $token) use ($Username, $Password) {
                     $mail = new PHPMailer\PHPMailer\PHPMailer(true);
                     $mail->isSMTP();
                     $mail->Host = 'smtp.ethereal.email';
                     $mail->SMTPAuth = true;
-                    $mail->Username = 'virginia91@ethereal.email';
-                    $mail->Password = 'VjQ1fE6EyXT6VhaEAR';
+                    $mail->Username = $Username;
+                    $mail->Password = $Password;
                     $mail->SMTPSecure = 'tls';
                     $mail->Port = 587;
 

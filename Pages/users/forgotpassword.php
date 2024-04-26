@@ -16,19 +16,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = $_POST['username'];
 
     try {
-        $expirationTime = 86400;
+        $Username = $_ENV['Username'];
+        $Password = $_ENV['Password'];
 
-        $dbContext->getUsersDatabase()->getAuth()->forgotPassword($_POST['username'], function ($selector, $token) use ($expirationTime) {
+        $dbContext->getUsersDatabase()->getAuth()->forgotPassword($_POST['username'], function ($selector, $token) use ($Username, $Password) {
             $mail = new PHPMailer\PHPMailer\PHPMailer(true);
             $mail->isSMTP();
             $mail->Host = 'smtp.ethereal.email';
             $mail->SMTPAuth = true;
-            $mail->Username = 'virginia91@ethereal.email';
-            $mail->Password = 'VjQ1fE6EyXT6VhaEAR';
+            $mail->Username = $Username;
+            $mail->Password = $Password;
             $mail->SMTPSecure = 'tls';
             $mail->Port = 587;
-
-            //det här ska finnas i .env
 
             $mail->From = "noreply@chefschoice.com";
             $mail->FromName = "Chef";
@@ -41,7 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <h2>Password reset</h2>
             <p>If you've lost your password or wish to reset it, click here: <a href='$url'>$url'></a> to get started</p>";
             $mail->send();
-        }, $expirationTime);
+        });
         $resetOk = true;
     } catch (\Delight\Auth\InvalidEmailException $e) {
         $message = "Invalid email address";
